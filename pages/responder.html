@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responder Questões - Sistema de Questões</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- CSS personalizado -->
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">Sistema de Questões</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="questoes.html">Questões</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="responder.html">Responder</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="imprimir.html">Imprimir</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <!-- Elementos de autenticação -->
+                    <div id="userNotLoggedIn">
+                        <button class="btn btn-outline-light me-2" id="btnLogin">Entrar</button>
+                        <button class="btn btn-light" id="btnRegister">Registrar</button>
+                    </div>
+                    <div id="userLoggedIn" class="d-none">
+                        <span class="text-light me-2" id="userDisplayName"></span>
+                        <button class="btn btn-outline-light" id="btnLogout">Sair</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteúdo principal -->
+    <div class="container my-5">
+        <h1 class="mb-4">Responder Questões</h1>
+        
+        <!-- Filtros -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Filtros</h5>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="filtroMateria" class="form-label">Matéria</label>
+                        <select class="form-select" id="filtroMateria">
+                            <option value="todas" selected>Todas</option>
+                            <!-- Opções serão carregadas dinamicamente -->
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="filtroAssunto" class="form-label">Assunto</label>
+                        <select class="form-select" id="filtroAssunto">
+                            <option value="todos" selected>Todos</option>
+                            <!-- Opções serão carregadas dinamicamente -->
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="filtroTipo" class="form-label">Tipo</label>
+                        <select class="form-select" id="filtroTipo">
+                            <option value="todos" selected>Todos</option>
+                            <option value="multipla_escolha">Múltipla Escolha</option>
+                            <option value="dissertativa">Dissertativa</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <button class="btn btn-primary" id="btnIniciarQuestionario">
+                            <i class="fas fa-play me-1"></i> Iniciar Questionário
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Área de questionário -->
+        <div id="questionarioContainer" class="d-none">
+            <!-- Cabeçalho do questionário -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 id="questionarioTitulo">Questionário</h3>
+                <div>
+                    <span class="badge bg-primary" id="questaoAtualIndicador">Questão 1 de 10</span>
+                </div>
+            </div>
+            
+            <!-- Progresso -->
+            <div class="progress mb-4">
+                <div class="progress-bar" id="questionarioProgresso" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+            </div>
+            
+            <!-- Questão atual -->
+            <div class="card mb-4" id="questaoAtualCard">
+                <div class="card-body">
+                    <h5 class="card-title mb-3" id="questaoMateria">Matéria - Assunto</h5>
+                    <p class="card-text" id="questaoEnunciado">Enunciado da questão...</p>
+                    
+                    <!-- Imagem da questão (se houver) -->
+                    <div id="questaoImagemContainer" class="text-center mb-3 d-none">
+                        <img id="questaoImagem" class="questao-imagem" alt="Imagem da questão">
+                    </div>
+                    
+                    <!-- Alternativas (para múltipla escolha) -->
+                    <div id="alternativasContainer" class="mt-4">
+                        <!-- Alternativas serão geradas dinamicamente -->
+                    </div>
+                    
+                    <!-- Campo de resposta (para dissertativa) -->
+                    <div id="respostaContainer" class="mt-4 d-none">
+                        <label for="respostaDissertativa" class="form-label">Sua resposta:</label>
+                        <textarea class="form-control" id="respostaDissertativa" rows="4"></textarea>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between">
+                        <button class="btn btn-outline-secondary" id="btnQuestaoAnterior" disabled>
+                            <i class="fas fa-arrow-left me-1"></i> Anterior
+                        </button>
+                        <button class="btn btn-primary" id="btnQuestaoProxima">
+                            Próxima <i class="fas fa-arrow-right ms-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Feedback -->
+            <div class="alert d-none" id="feedbackContainer" role="alert">
+                <!-- Feedback será gerado dinamicamente -->
+            </div>
+            
+            <!-- Botões de ação -->
+            <div class="d-flex justify-content-between mb-4">
+                <button class="btn btn-danger" id="btnCancelarQuestionario">
+                    <i class="fas fa-times me-1"></i> Cancelar
+                </button>
+                <button class="btn btn-success d-none" id="btnFinalizarQuestionario">
+                    <i class="fas fa-check me-1"></i> Finalizar
+                </button>
+            </div>
+        </div>
+        
+        <!-- Resultados -->
+        <div id="resultadosContainer" class="d-none">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <h3 class="card-title mb-4">Resultados do Questionário</h3>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h5 class="card-title">Total de Questões</h5>
+                                    <p class="card-text display-4" id="totalQuestoes">0</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-success text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">Acertos</h5>
+                                    <p class="card-text display-4" id="totalAcertos">0</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-danger text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">Erros</h5>
+                                    <p class="card-text display-4" id="totalErros">0</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h4>Desempenho</h4>
+                        <div class="progress" style="height: 30px;">
+                            <div class="progress-bar bg-success" id="progressoAcertos" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                            <div class="progress-bar bg-danger" id="progressoErros" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <button class="btn btn-primary" id="btnNovoQuestionario">
+                            <i class="fas fa-redo me-1"></i> Novo Questionário
+                        </button>
+                        <button class="btn btn-outline-primary" id="btnVerDetalhes">
+                            <i class="fas fa-list me-1"></i> Ver Detalhes
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Detalhes dos resultados -->
+            <div id="detalhesResultados" class="d-none">
+                <h4 class="mb-3">Detalhes das Respostas</h4>
+                <div class="accordion" id="accordionResultados">
+                    <!-- Detalhes serão gerados dinamicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Login -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Entrar no Sistema</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="loginEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Senha</label>
+                            <input type="password" class="form-control" id="loginPassword" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Entrar</button>
+                        </div>
+                        <div class="text-center mt-3">
+                            <p>Ou entre com:</p>
+                            <button type="button" class="btn btn-outline-danger me-2" id="btnGoogleLogin">
+                                <i class="fab fa-google"></i> Google
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Registro -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Criar Conta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registerForm">
+                        <div class="mb-3">
+                            <label for="registerName" class="form-label">Nome</label>
+                            <input type="text" class="form-control" id="registerName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="registerEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPassword" class="form-label">Senha</label>
+                            <input type="password" class="form-control" id="registerPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerConfirmPassword" class="form-label">Confirmar Senha</label>
+                            <input type="password" class="form-control" id="registerConfirmPassword" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Registrar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p>Sistema de Questões &copy; 2025</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle com Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Firebase App (a base) é sempre necessário e deve ser carregado primeiro -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    
+    <!-- Scripts personalizados -->
+    <script src="../js/firebase-config.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/responder.js"></script>
+</body>
+</html>

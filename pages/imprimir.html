@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imprimir Questões - Sistema de Questões</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- CSS personalizado -->
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">Sistema de Questões</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="questoes.html">Questões</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="responder.html">Responder</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="imprimir.html">Imprimir</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <!-- Elementos de autenticação -->
+                    <div id="userNotLoggedIn">
+                        <button class="btn btn-outline-light me-2" id="btnLogin">Entrar</button>
+                        <button class="btn btn-light" id="btnRegister">Registrar</button>
+                    </div>
+                    <div id="userLoggedIn" class="d-none">
+                        <span class="text-light me-2" id="userDisplayName"></span>
+                        <button class="btn btn-outline-light" id="btnLogout">Sair</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteúdo principal -->
+    <div class="container my-5">
+        <h1 class="mb-4">Imprimir Questões</h1>
+        
+        <!-- Filtros e opções de impressão -->
+        <div class="row mb-4">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Filtros</h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="filtroMateria" class="form-label">Matéria</label>
+                                <select class="form-select" id="filtroMateria">
+                                    <option value="todas" selected>Todas</option>
+                                    <!-- Opções serão carregadas dinamicamente -->
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="filtroAssunto" class="form-label">Assunto</label>
+                                <select class="form-select" id="filtroAssunto">
+                                    <option value="todos" selected>Todos</option>
+                                    <!-- Opções serão carregadas dinamicamente -->
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="filtroTipo" class="form-label">Tipo</label>
+                                <select class="form-select" id="filtroTipo">
+                                    <option value="todos" selected>Todos</option>
+                                    <option value="multipla_escolha">Múltipla Escolha</option>
+                                    <option value="dissertativa">Dissertativa</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="filtroOrdenacao" class="form-label">Ordenar por</label>
+                                <select class="form-select" id="filtroOrdenacao">
+                                    <option value="dataCriacao_desc" selected>Data de criação (mais recente)</option>
+                                    <option value="dataCriacao_asc">Data de criação (mais antiga)</option>
+                                    <option value="materia_asc">Matéria (A-Z)</option>
+                                    <option value="materia_desc">Matéria (Z-A)</option>
+                                    <option value="assunto_asc">Assunto (A-Z)</option>
+                                    <option value="assunto_desc">Assunto (Z-A)</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="filtroApenasMinhas">
+                                    <label class="form-check-label" for="filtroApenasMinhas">
+                                        Mostrar apenas minhas questões
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-primary" id="btnAplicarFiltros">
+                                    <i class="fas fa-filter me-1"></i> Aplicar Filtros
+                                </button>
+                                <button class="btn btn-outline-secondary" id="btnLimparFiltros">
+                                    <i class="fas fa-times me-1"></i> Limpar Filtros
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Opções de Impressão</h5>
+                        <div class="mb-3">
+                            <label for="tituloImpressao" class="form-label">Título</label>
+                            <input type="text" class="form-control" id="tituloImpressao" placeholder="Lista de Questões">
+                        </div>
+                        <div class="mb-3">
+                            <label for="subtituloImpressao" class="form-label">Subtítulo</label>
+                            <input type="text" class="form-control" id="subtituloImpressao" placeholder="Opcional">
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="mostrarRespostas">
+                            <label class="form-check-label" for="mostrarRespostas">
+                                Mostrar respostas corretas
+                            </label>
+                        </div>
+                        <div class="d-grid">
+                            <button class="btn btn-success" id="btnGerarPDF" disabled>
+                                <i class="fas fa-file-pdf me-1"></i> Gerar PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Lista de questões -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Questões Selecionadas</h5>
+                <span class="badge bg-primary" id="questoesSelecionadasCount">0 questões selecionadas</span>
+            </div>
+            <div class="card-body">
+                <!-- Spinner de carregamento -->
+                <div class="spinner-container" id="loadingQuestoes">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Carregando...</span>
+                    </div>
+                </div>
+                
+                <!-- Mensagem de nenhuma questão encontrada -->
+                <div class="alert alert-info d-none" id="nenhumaQuestao">
+                    <i class="fas fa-info-circle me-1"></i> Nenhuma questão encontrada com os filtros selecionados.
+                </div>
+                
+                <!-- Lista de questões para seleção -->
+                <div id="listaQuestoes" class="d-none">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th width="50">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="selecionarTodas">
+                                        </div>
+                                    </th>
+                                    <th>Questão</th>
+                                    <th>Matéria</th>
+                                    <th>Assunto</th>
+                                    <th>Tipo</th>
+                                    <th>Data</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaQuestoes">
+                                <!-- Questões serão carregadas dinamicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Paginação -->
+        <nav aria-label="Paginação de questões" class="d-none" id="paginacaoContainer">
+            <ul class="pagination justify-content-center" id="paginacao">
+                <!-- Paginação será gerada dinamicamente -->
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Modal de Login -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Entrar no Sistema</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="loginEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Senha</label>
+                            <input type="password" class="form-control" id="loginPassword" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Entrar</button>
+                        </div>
+                        <div class="text-center mt-3">
+                            <p>Ou entre com:</p>
+                            <button type="button" class="btn btn-outline-danger me-2" id="btnGoogleLogin">
+                                <i class="fab fa-google"></i> Google
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Registro -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Criar Conta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registerForm">
+                        <div class="mb-3">
+                            <label for="registerName" class="form-label">Nome</label>
+                            <input type="text" class="form-control" id="registerName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="registerEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPassword" class="form-label">Senha</label>
+                            <input type="password" class="form-control" id="registerPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerConfirmPassword" class="form-label">Confirmar Senha</label>
+                            <input type="password" class="form-control" id="registerConfirmPassword" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Registrar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Visualização de Questão -->
+    <div class="modal fade" id="visualizarQuestaoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Visualizar Questão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="visualizarQuestaoConteudo">
+                    <!-- Conteúdo da questão será carregado dinamicamente -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p>Sistema de Questões &copy; 2025</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle com Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Firebase App (a base) é sempre necessário e deve ser carregado primeiro -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    
+    <!-- html2pdf para geração de PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <!-- Scripts personalizados -->
+    <script src="../js/firebase-config.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/imprimir.js"></script>
+</body>
+</html>
