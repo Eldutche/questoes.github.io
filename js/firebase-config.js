@@ -1,12 +1,13 @@
 // Configuração do Firebase
 const firebaseConfig = {
   // Estas são configurações de exemplo. O usuário precisará substituir com suas próprias credenciais do Firebase
-  apiKey: "YOUR_API_KEY",
-  authDomain: "your-project-id.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project-id.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyBa8bgpGBPPJWxZk0KkhzSgf3OEPeJiCeQ",
+  authDomain: "questoes-site-71196.firebaseapp.com",
+  projectId: "questoes-site-71196",
+  storageBucket: "questoes-site-71196.firebasestorage.app",
+  messagingSenderId: "898747884068",
+  appId: "1:898747884068:web:015d4c08a41610b6e72eb1"
+  measurementId: "G-T36DDBXNXM"
 };
 
 // Inicializar Firebase
