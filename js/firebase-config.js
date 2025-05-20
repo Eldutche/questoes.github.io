@@ -6,7 +6,7 @@ const firebaseConfig = {
   projectId: "questoes-site-71196",
   storageBucket: "questoes-site-71196.firebasestorage.app",
   messagingSenderId: "898747884068",
-  appId: "1:898747884068:web:015d4c08a41610b6e72eb1"
+  appId: "1:898747884068:web:015d4c08a41610b6e72eb1",
   measurementId: "G-T36DDBXNXM"
 };
 
